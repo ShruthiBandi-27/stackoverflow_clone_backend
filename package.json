@@ -1,7 +1,6 @@
 {
   "name": "stackoverflow_clone_backend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -20,5 +19,14 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShruthiBandi-27/stackoverflow_clone_backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ShruthiBandi-27/stackoverflow_clone_backend/issues"
+  },
+  "homepage": "https://github.com/ShruthiBandi-27/stackoverflow_clone_backend#readme",
+  "description": ""
 }

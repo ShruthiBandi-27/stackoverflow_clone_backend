@@ -5,6 +5,7 @@ import {
 import * as dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
+import { ObjectId } from 'mongodb';
 
 const app = express();
 
@@ -40,6 +41,42 @@ app.get("/questions", async (req, res) => {
     console.log(questions);
   res.status(200).send(questions);
 });
+
+app.get("/question/:id", async (req, res) => {
+  console.log(`backend API for question details, id= ${req.params.id}`);
+  const quesDetails = await client.db("stackoverflow").collection("questions").aggregate([
+    {
+      $match : {
+        _id: new ObjectId(req.params.id)
+      }
+
+    },
+    {
+      $addFields: {
+        questionIdString: { $toString: "$_id" }
+      }
+    },
+    {
+      $lookup : {
+        from: "comments",
+        localField: "questionIdString",
+        foreignField: "question_id",
+        as: "comments"
+      },
+    },
+    {
+      $lookup : {
+        from: "answers",
+        localField: "questionIdString",
+        foreignField: "question_id",
+        as: "answers"
+      },
+    }
+    
+  ]).toArray()
+  console.log(`quesDetails: ${JSON.stringify(quesDetails)}`);
+  res.send(quesDetails);
+})
 
 //Posting question
   app.post("/ask-question", async (req, res) => {
@@ -87,7 +124,8 @@ app.get("/questions", async (req, res) => {
   });
 
   //Posting comment
-  app.post("/:id", async (req, res) => {
+  app.post("/comment/:id", async (req, res) => {
+    console.log("backend posting comment")
     const {comment, user} = req.body;
     const createdAt = new Date();
     console.log(`id: ${req.params.id}, comment: ${comment}, user : ${user}`);
